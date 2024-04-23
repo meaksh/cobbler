@@ -88,6 +88,10 @@ class DhcpManagerModule(ManagerModule):
     TODO
     """
 
+    def sync_single_ethers_entry(self) -> None:
+        self.regen_ethers()
+
+
 class DnsManagerModule(ManagerModule):
     """
     TODO
@@ -98,6 +102,9 @@ class DnsManagerModule(ManagerModule):
         """
         TODO
         """
+
+    def sync_single_hosts_entry(self) -> None:
+        self.regen_hosts()
 
 
 class TftpManagerModule(ManagerModule):

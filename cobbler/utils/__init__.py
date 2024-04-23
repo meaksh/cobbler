@@ -1356,7 +1356,7 @@ def filelock(lock_file: str):
             os.close(fd)
 
 
-def merge_dicts_recursive(base_dict, updating_dict) -> Dict:
+def merge_dicts_recursive(base_dict, updating_dict, str_append=False) -> Dict:
     """Merge updating_dict into base_config recursively.
 
     :param base_dict: Base dictionary.
@@ -1370,6 +1370,12 @@ def merge_dicts_recursive(base_dict, updating_dict) -> Dict:
             and isinstance(base_dict.get(k), dict)
         ):
             ret[k] = merge_dicts_recursive(base_dict[k], v)
+        elif (
+            str_append
+            and k in ret
+            and isinstance(v, str)
+        ):
+            ret[k] += v
         else:
             ret[k] = v
     return ret

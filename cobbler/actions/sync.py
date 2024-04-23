@@ -464,8 +464,9 @@ class CobblerSync:
         # rebuild system_list file in webdir
         if self.settings.manage_dhcp:
             self.dhcp.sync_single_system(system_obj)
+            self.dhcp.sync_single_ethers_entry(system_obj)
         if self.settings.manage_dns:
-            self.dns.regen_hosts()
+            self.dns.sync_single_hosts_entry(system_obj)
         # write the PXE files for the system
         self.tftpd.sync_single_system(system_obj)
 
