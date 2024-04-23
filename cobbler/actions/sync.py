@@ -231,8 +231,7 @@ class CobblerSync:
         Write all files which are associated to DHCP.
         """
         self.logger.info("Rendering DHCP files")
-        data = self.dhcp.gen_full_config()
-        self.dhcp.write_configs(data)
+        self.dhcp.write_configs()
         self.dhcp.regen_ethers()
 
     def sync_dhcp(self):

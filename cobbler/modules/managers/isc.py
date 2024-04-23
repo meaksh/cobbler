@@ -68,7 +68,7 @@ class _IscManager(DhcpManagerModule):
             self.config,
             {"date": time.asctime(time.gmtime()), "dhcp_tags": system_config},
         )
-        self.write_configs(self.config)
+        self._write_configs(self.config)
         return self.restart_service()
 
     def sync(self):
@@ -78,7 +78,7 @@ class _IscManager(DhcpManagerModule):
         # Reset generic counter and cached config
         self.generic_entry_cnt = 0
         self.config = self.gen_full_config()
-        self.write_configs(self.config)
+        self._write_configs(self.config)
         return self.restart_service()
 
     def _gen_system_config(
@@ -97,7 +97,7 @@ class _IscManager(DhcpManagerModule):
         dhcp_tags = {"default": {}}
         processed_system_master_interfaces = set()
         ignore_macs = set()
-        if not system_obj.is_management_supported():
+        if not system_obj.is_management_supported(cidr_ok=False):
             self.logger.debug(
                 "%s does not meet precondition: MAC, IPv4, or IPv6 address is required.",
                 system_obj.name,
@@ -293,7 +293,7 @@ class _IscManager(DhcpManagerModule):
             raise ValueError("No config to write.")
         self._write_config(config_data, template_file, self.settings_file_v6)
 
-    def write_configs(self, config_data=None) -> None:
+    def _write_configs(self, config_data=None) -> None:
         if not config_data:
             raise ValueError("No config to write.")
 
@@ -301,6 +301,10 @@ class _IscManager(DhcpManagerModule):
             self.write_v4_config(config_data)
         if self.settings.manage_dhcp_v6:
             self.write_v6_config(config_data)
+
+    def write_configs(self) -> None:
+        data = self.gen_full_config()
+        self._write_configs(data)
 
     def restart_dhcp(self, service_name: str, version: int) -> int:
         """
